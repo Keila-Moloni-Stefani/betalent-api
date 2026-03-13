@@ -2,6 +2,13 @@
 
 API RESTful em AdonisJS 7 para gerenciamento de pagamentos multi-gateway, focada no **Nível 1** do desafio (valor da compra vem direto pela API e gateways sem autenticação).
 
+Fluxo principal:
+
+O cliente faz uma compra informando: nome, e‑mail, valor (amount) e dados do cartão.
+A API consulta a tabela gateways e tenta cobrar no gateway com maior prioridade; se falhar, tenta o próximo.
+Se algum der certo, a transação é salva como paid e retornada para o cliente; se todos falham, responde erro 400.
+
+
 ### ✅ Stack
 - **Node.js / AdonisJS 7**
 - **MySQL** (via Docker)
@@ -76,7 +83,7 @@ O `.env` contém exemplos para dois cenários:
 
 Além disso:
 
-- URLs dos mocks de gateway (padrão do enunciado):
+- URLs dos mocks de gateway:
   - `GATEWAY1_URL=http://localhost:3001`
   - `GATEWAY2_URL=http://localhost:3002`
 - Flag para facilitar testes sem Docker:
@@ -188,6 +195,10 @@ Para facilitar testes em ambientes sem Docker ou sem os containers dos mocks:
     GATEWAY1_URL=http://localhost:3001
     GATEWAY2_URL=http://localhost:3002
     ```
+- Para testar diretamente os mocks (usando a collection/Postman):
+- Gateway 1: fazer POST /login em http://localhost:3001/login para obter gateway1_token e usá‑lo como Bearer.
+- Gateway 2: sempre enviar os headers Gateway-Auth-Token e Gateway-Auth-Secret mostrados no enunciado.
+- A collection multigateways_payment_api.json do repositório oficial já vem pronta com esses exemplos.
 
 ---
 
