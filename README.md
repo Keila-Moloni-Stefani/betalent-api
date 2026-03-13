@@ -313,3 +313,8 @@ Não implementado neste projeto (por foco no **Nível 1**):
 
 Esses pontos podem ser evoluídos em uma próxima iteração.
 
+---
+
+Teste Prático Back-end BeTalent
+
+Desenvolvido por Keila Moloni Stefani
