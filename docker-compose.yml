@@ -1,0 +1,53 @@
+services:
+  app:
+    build: .
+    container_name: betalent-app
+    ports:
+      - "${PORT:-3333}:3333"
+    environment:
+      NODE_ENV: development
+      TZ: UTC
+      APP_KEY: ${APP_KEY}
+      APP_URL: http://localhost:${PORT:-3333}
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: betalent
+      DB_PASSWORD: betalent
+      DB_DATABASE: betalent
+      GATEWAY1_URL: http://gateways-mock:3001
+      GATEWAY2_URL: http://gateways-mock:3002
+    depends_on:
+      - mysql
+      - gateways-mock
+    command: ["node", "ace", "serve", "--watch"]
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  mysql:
+    image: mysql:8.0
+    container_name: betalent-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: betalent
+      MYSQL_USER: betalent
+      MYSQL_PASSWORD: betalent
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  gateways-mock:
+    image: matheusprotzen/gateways-mock
+    container_name: betalent-gateways-mock
+    restart: unless-stopped
+    environment:
+      REMOVE_AUTH: 'true'
+    ports:
+      - "3001:3001"
+      - "3002:3002"
+
+volumes:
+  mysql-data:
+
